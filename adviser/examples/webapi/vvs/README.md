@@ -10,3 +10,4 @@ VVS API example shows you how to create a task-oriented dialogue system without 
 `nlg.py`: The code for the VVS-specific natural language generation <br>
 `policy.py`:  File containing code for deciding which system acts to perform <br>
 `vvs_api.py`: The code which requests the information via the VVS API Wrapper <br>
+`data`: folder containing csv file for the VVS API containing information about the stations
