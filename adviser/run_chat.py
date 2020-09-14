@@ -137,9 +137,23 @@ def load_qa_domain():
     qa_nlg = MultiNLG(domain=domain)
     return domain, [qa_nlu, qa_policy, qa_nlg]
 
+def load_vvs_domain():
+    """
+    Initializes necessary components for the VVS dialog system.
+    :return:
+    """
+    from examples.webapi.vvs import VVSDomain, VVSNLU, VVSNLG, VVSPolicy, VVSBST
+    
+    vvs = VVSDomain()
+    vvs_nlu = VVSNLU(domain=vvs)
+    vvs_bst = VVSBST(domain=vvs)
+    vvs_policy = VVSPolicy(domain=vvs)
+    vvs_nlg = VVSNLG(domain=vvs)
+    return vvs, [vvs_nlu, vvs_bst, vvs_policy, vvs_nlg]
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='ADVISER 2.0 Dialog System')
-    parser.add_argument('domains', nargs='+', choices=['lecturers', 'weather', 'mensa', 'qa'],
+    parser.add_argument('domains', nargs='+', choices=['lecturers', 'weather', 'mensa', 'qa', 'vvs'],
                         help="Chat domain(s). For multidomain type as list: domain1 domain2 .. \n",
                         default="ImsLecturers")
     parser.add_argument('-g', '--gui', action='store_true', help="Start Webui server")
@@ -203,6 +217,10 @@ if __name__ == "__main__":
         qa_domain, qa_services = load_qa_domain()
         domains.append(qa_domain)
         services.extend(qa_services)
+    if 'vvs' in args.domains:
+        v_domain, v_services = load_vvs_domain()
+        domains.append(v_domain)
+        services.extend(v_services)
 
     # load HCI interfaces
     gui_server_prochandle = None
