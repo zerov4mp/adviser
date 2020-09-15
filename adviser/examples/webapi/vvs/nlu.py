@@ -20,10 +20,9 @@
 from typing import List
 import re
 
-from services.nlu import HandcraftedNLU
 from utils.logger import DiasysLogger
 from utils import UserAct, UserActionType
-from services.service import PublishSubscribe
+from services.service import Service, PublishSubscribe
 
 from utils.sysact import SysAct
 from utils.beliefstate import BeliefState
@@ -56,7 +55,7 @@ DATETIME_REGEXES = [
     re.compile(r'\d+\s?(min(s)?|minute(s)?|hour(s)?|h)(\s|\.|\?|$)')
 ]
 
-class VVSNLU(HandcraftedNLU):
+class VVSNLU(Service):
     """NLU for the vvs domain."""
     frombool = False
     tobool = False
@@ -64,7 +63,10 @@ class VVSNLU(HandcraftedNLU):
 
     def __init__(self, domain, logger=DiasysLogger()):
         # only calls super class' constructor
-        HandcraftedNLU.__init__(self, domain, logger)
+        super(VVSNLU, self).__init__(domain, debug_logger=logger)
+    #def __init__(self, domain, logger=DiasysLogger()):
+        # only calls super class' constructor
+        #HandcraftedNLU.__init__(self, domain, logger)
 
     @PublishSubscribe(sub_topics=["user_utterance"], pub_topics=["user_acts"])
     def extract_user_acts(self, user_utterance: str = None, sys_act: SysAct = None, beliefstate: BeliefState = None) -> dict(user_acts=List[UserAct]):
