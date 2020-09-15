@@ -64,9 +64,7 @@ class VVSNLU(Service):
     def __init__(self, domain, logger=DiasysLogger()):
         # only calls super class' constructor
         super(VVSNLU, self).__init__(domain, debug_logger=logger)
-    #def __init__(self, domain, logger=DiasysLogger()):
-        # only calls super class' constructor
-        #HandcraftedNLU.__init__(self, domain, logger)
+    
 
     @PublishSubscribe(sub_topics=["user_utterance"], pub_topics=["user_acts"])
     def extract_user_acts(self, user_utterance: str = None, sys_act: SysAct = None, beliefstate: BeliefState = None) -> dict(user_acts=List[UserAct]):
