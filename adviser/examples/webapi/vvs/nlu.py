@@ -23,13 +23,12 @@ import re
 from utils.logger import DiasysLogger
 from utils import UserAct, UserActionType
 from services.service import Service, PublishSubscribe
-
 from utils.sysact import SysAct
 from utils.beliefstate import BeliefState
 
 # simple list of regexes
 LINE_NAME_REGEXES = [
-    re.compile(r'(?<!on )\bthe ([^ ]*)\b')
+    re.compile(r'(?<!on )(?<!from )(?<!leave )(?<!arrive )(?<!to )\bthe ([^ ]*)\b')
 ]
 
 STATION_DEPARTURE_REGEXES = [
@@ -64,7 +63,7 @@ class VVSNLU(Service):
     def __init__(self, domain, logger=DiasysLogger()):
         # only calls super class' constructor
         super(VVSNLU, self).__init__(domain, debug_logger=logger)
-    
+
 
     @PublishSubscribe(sub_topics=["user_utterance"], pub_topics=["user_acts"])
     def extract_user_acts(self, user_utterance: str = None, sys_act: SysAct = None, beliefstate: BeliefState = None) -> dict(user_acts=List[UserAct]):
@@ -114,7 +113,8 @@ class VVSNLU(Service):
             # Line
             match = regex.search(user_utterance)
             if match:
-                user_acts.append(UserAct(user_utterance, UserActionType.Inform, 'line', match.group(1)))
+                line = match.group().split(" ")[-1]
+                user_acts.append(UserAct(user_utterance, UserActionType.Inform, 'line', line))
                 break
         for regex in STATION_FROM_REGEXES:
             # From

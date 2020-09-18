@@ -1,6 +1,5 @@
 from typing import List
 from utils.useract import UserActionType, UserAct
-
 from services.bst import HandcraftedBST
 
 class VVSBST(HandcraftedBST):
@@ -27,12 +26,19 @@ class VVSBST(HandcraftedBST):
 
         else:
             reset = False
+            mandatory_slots_list = self.domain.get_mandatory_slots()
             slots = {act.slot for act in acts if act.type == UserActionType.Inform}
+            index = -1
+            for i,mandatory_list in enumerate(mandatory_slots_list):
+                for mandatory in mandatory_list:
+                    if mandatory in slots:
+                        index = i
+
             for slot in [s for s in self.bs['informs']]:
                 if slot in slots:
-                    if self.bs['informs'][slot]:
                        reset = True
+                if index != -1 and slot not in mandatory_slots_list[index]:
+                    reset = True
             if reset:
                for slot in [s for s in self.bs['informs']]:
                     del self.bs['informs'][slot]
-        
